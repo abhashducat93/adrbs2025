@@ -327,6 +327,25 @@
             grid-template-columns: 1fr 1fr;
             gap: 50px;
         }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .map-container {
+            height: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
         
         .contact-info h3 {
             font-size: 24px;
@@ -361,6 +380,40 @@
         
         .contact-form textarea {
             height: 150px;
+        }
+
+        .form-message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .form-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .form-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
         footer {
@@ -462,7 +515,124 @@
         .whatsapp-button i {
             margin-top: 2px;
         }
-        
+
+        /* Case Study Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 900px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--accent-color);
+        }
+
+        .case-study-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .case-study-header h2 {
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .case-study-header .client-tag {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .case-study-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .case-study-image {
+            text-align: center;
+        }
+
+        .case-study-image img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .case-study-details h3 {
+            color: var(--dark-color);
+            margin: 20px 0 10px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 5px;
+        }
+
+        .case-study-details ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .case-study-details ul li {
+            margin-bottom: 8px;
+            list-style-type: disc;
+        }
+
+        .results-section {
+            grid-column: 1 / -1;
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            text-align: center;
+        }
+
+        .result-item {
+            padding: 15px;
+        }
+
+        .result-item .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+
         @media (max-width: 768px) {
             .header-container {
                 flex-direction: column;
@@ -505,6 +675,24 @@
                 font-size: 25px;
                 bottom: 20px;
                 right: 20px;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
+            }
+
+            .case-study-content {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container {
+                height: 300px;
             }
         }
     </style>
@@ -642,7 +830,7 @@
                     <span class="client-tag">Cloud Solutions Provider</span>
                     <p>We partnered with CloudKing to develop and deploy their enterprise-grade cloud management platform. Our team implemented scalable microservices architecture with Kubernetes orchestration, reducing their deployment times by 60% and improving system reliability.</p>
                     <p><strong>Technologies Used:</strong> AWS, Kubernetes, Docker, Node.js, React</p>
-                    <a href="#" class="btn">View Case Study</a>
+                    <a href="#" class="btn" onclick="openCaseStudy('cloudking')">View Case Study</a>
                 </div>
             </div>
             
@@ -655,11 +843,132 @@
                     <span class="client-tag">Education Technology</span>
                     <p>For Campus Buddy, we created a comprehensive campus management system with mobile apps for students and faculty. The solution included attendance tracking, assignment submission, and real-time notifications. Our deployment strategy ensured zero downtime during academic sessions.</p>
                     <p><strong>Technologies Used:</strong> Flutter, Firebase, Python Django, CI/CD Pipelines</p>
-                    <a href="#" class="btn">View Case Study</a>
+                    <a href="#" class="btn" onclick="openCaseStudy('campusbuddy')">View Case Study</a>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- CloudKing Case Study Modal -->
+    <div id="cloudking-case-study" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('cloudking-case-study')">&times;</span>
+            <div class="case-study-header">
+                <h2>CloudKing Cloud Management Platform</h2>
+                <span class="client-tag">Cloud Solutions Provider</span>
+                <p>Transforming enterprise cloud management with scalable microservices architecture</p>
+            </div>
+            
+            <div class="case-study-content">
+                <div class="case-study-image">
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31" alt="CloudKing Platform">
+                </div>
+                
+                <div class="case-study-details">
+                    <h3>Project Overview</h3>
+                    <p>CloudKing approached ADRBS with the challenge of modernizing their legacy cloud management system that was struggling with scalability issues and high maintenance costs. The existing platform couldn't handle their growing customer base and lacked essential features for enterprise clients.</p>
+                    
+                    <h3>Our Solution</h3>
+                    <ul>
+                        <li>Designed and implemented a microservices architecture using Kubernetes for orchestration</li>
+                        <li>Developed a responsive front-end dashboard with React and Redux</li>
+                        <li>Created RESTful APIs with Node.js and Express for backend services</li>
+                        <li>Implemented CI/CD pipelines using Jenkins and Docker for seamless deployments</li>
+                        <li>Integrated monitoring with Prometheus and Grafana for real-time performance tracking</li>
+                        <li>Added multi-cloud support for AWS, Azure, and Google Cloud Platform</li>
+                    </ul>
+                    
+                    <h3>Technical Challenges</h3>
+                    <ul>
+                        <li>Migrating existing data without downtime during the transition period</li>
+                        <li>Implementing secure communication between microservices</li>
+                        <li>Optimizing performance for handling large-scale infrastructure monitoring</li>
+                        <li>Ensuring compatibility with various cloud provider APIs</li>
+                    </ul>
+                </div>
+                
+                <div class="results-section">
+                    <h3>Project Results</h3>
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <div class="number">60%</div>
+                            <div>Reduction in deployment times</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="number">99.9%</div>
+                            <div>System uptime achieved</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="number">3x</div>
+                            <div>Increase in concurrent user capacity</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px; text-align: center;">The new platform enabled CloudKing to onboard 40+ new enterprise clients within the first six months of launch, significantly increasing their market share in the cloud management sector.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Campus Buddy Case Study Modal -->
+    <div id="campusbuddy-case-study" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('campusbuddy-case-study')">&times;</span>
+            <div class="case-study-header">
+                <h2>Campus Buddy Education Platform</h2>
+                <span class="client-tag">Education Technology</span>
+                <p>Revolutionizing campus management with a comprehensive digital solution</p>
+            </div>
+            
+            <div class="case-study-content">
+                <div class="case-study-image">
+                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1" alt="Campus Buddy App">
+                </div>
+                
+                <div class="case-study-details">
+                    <h3>Project Overview</h3>
+                    <p>Campus Buddy needed a unified platform to manage all aspects of campus life for students, faculty, and administrators. Their existing systems were fragmented, leading to inefficiencies and poor user experience. ADRBS was tasked with creating a comprehensive solution that would integrate all campus functions into a single, user-friendly platform.</p>
+                    
+                    <h3>Our Solution</h3>
+                    <ul>
+                        <li>Developed cross-platform mobile apps using Flutter for consistent experience on iOS and Android</li>
+                        <li>Built a robust backend with Python Django and PostgreSQL for data management</li>
+                        <li>Implemented real-time notifications using Firebase Cloud Messaging</li>
+                        <li>Created a comprehensive admin dashboard for faculty and administrators</li>
+                        <li>Integrated with existing student information systems through custom APIs</li>
+                        <li>Developed secure authentication with biometric login options</li>
+                        <li>Implemented automated attendance tracking using QR codes</li>
+                    </ul>
+                    
+                    <h3>Technical Challenges</h3>
+                    <ul>
+                        <li>Synchronizing data across multiple institutions with different existing systems</li>
+                        <li>Ensuring platform accessibility for users with varying levels of technical proficiency</li>
+                        <li>Maintaining performance with large datasets of student records and course materials</li>
+                        <li>Implementing offline functionality for areas with poor internet connectivity</li>
+                    </ul>
+                </div>
+                
+                <div class="results-section">
+                    <h3>Project Results</h3>
+                    <div class="results-grid">
+                        <div class="result-item">
+                            <div class="number">95%</div>
+                            <div>Adoption rate among students</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="number">80%</div>
+                            <div>Reduction in administrative workload</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="number">50+</div>
+                            <div>Institutions onboarded in first year</div>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px; text-align: center;">The Campus Buddy platform transformed campus operations for partner institutions, reducing paperwork by 75% and improving communication between students and faculty. The mobile apps achieved a 4.8/5 rating in app stores with over 100,000 downloads in the first six months.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <section class="contact" id="contact">
         <div class="container">
@@ -668,31 +977,42 @@
             </div>
             <div class="contact-container">
                 <div class="contact-info">
-                    <h3>Get in Touch</h3>
-                    <p>Have a project in mind or want to learn more about our services? Reach out to us and our team will get back to you within 24 hours.</p>
-                    <div class="contact-details">
-                        <div>
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>MC H NO-36 VILL-NAYA BANS NOIDA, INIDA - 201301</span>
-                        </div>
-                        <div>
-                            <i class="fas fa-phone-alt"></i>
-                            <span>+91 9236586159</span>
-                        </div>
-                        <div>
-                            <i class="fas fa-envelope"></i>
-                            <span>info@adrbscloudindia.com</span>
+                    <div>
+                        <h3>Get in Touch</h3>
+                        <p>Have a project in mind or want to learn more about our services? Reach out to us and our team will get back to you within 24 hours.</p>
+                        <div class="contact-details">
+                            <div>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>MC Complex, Captain Vijyant Thapar Marg, Naya Bans, Naya Bans Village, Sector 15, Noida, Uttar Pradesh 201301</span>
+                            </div>
+                            <div>
+                                <i class="fas fa-phone-alt"></i>
+                                <span>+91 9236586159</span>
+                            </div>
+                            <div>
+                                <i class="fas fa-envelope"></i>
+                                <span>info@adrbscloudindia.com</span>
+                            </div>
                         </div>
                     </div>
+                    <div class="contact-form">
+                        <form id="contactForm">
+                            <!-- Success/Error Message Container -->
+                            <div id="formMessage" class="form-message"></div>
+                            
+                            <!-- Form Fields -->
+                            <input type="text" id="name" name="name" placeholder="Your Name" required>
+                            <input type="email" id="email" name="email" placeholder="Your Email" required>
+                            <input type="text" id="subject" name="subject" placeholder="Subject">
+                            <textarea id="message" name="message" placeholder="Your Message" required></textarea>
+                            <button type="submit" class="btn btn-accent" id="submitButton">
+                                <span id="buttonText">Send Message</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <div class="contact-form">
-                    <form>
-                        <input type="text" placeholder="Your Name" required>
-                        <input type="email" placeholder="Your Email" required>
-                        <input type="text" placeholder="Subject">
-                        <textarea placeholder="Your Message" required></textarea>
-                        <button type="submit" class="btn btn-accent">Send Message</button>
-                    </form>
+                <div class="map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.715261899378!2d77.32726831508098!3d28.552808982451214!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce44e80fc3e67%3A0x5d1c6a9dd5e9d7a7!2sMC%20Complex%2C%20Captain%20Vijyant%20Thapar%20Marg%2C%20Naya%20Bans%2C%20Naya%20Bans%20Village%2C%20Sector%2015%2C%20Noida%2C%20Uttar%20Pradesh%20201301!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin" allowfullscreen="" loading="lazy"></iframe>
                 </div>
             </div>
         </div>
@@ -750,5 +1070,117 @@
     <a href="https://api.whatsapp.com/send/?phone=919559571277&text=Welcome+to+ADRBS+Pvt.+Ltd.&type=phone_number&app_absent=0" class="whatsapp-button" target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>
+
+    <script>
+        // Case Study Modal Functions
+        function openCaseStudy(studyId) {
+            event.preventDefault();
+            document.getElementById(studyId + '-case-study').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Enhanced Form Submission with Fallbacks
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formMessage = document.getElementById('formMessage');
+            const submitButton = document.getElementById('submitButton');
+            const buttonText = document.getElementById('buttonText');
+            
+            // Show loading state
+            submitButton.disabled = true;
+            buttonText.innerHTML = '<span class="loading-spinner"></span> Sending...';
+            formMessage.textContent = '';
+            formMessage.className = 'form-message';
+
+            // Get form data
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value || 'No Subject',
+                message: document.getElementById('message').value,
+                _timestamp: Date.now()
+            };
+
+            try {
+                // Try FormSubmit first
+                let response = await submitViaFormSubmit(formData);
+                
+                if (!response.ok) {
+                    // If FormSubmit fails, try the server-side endpoint
+                    response = await submitViaServer(formData);
+                }
+
+                if (response.ok) {
+                    // Success handling
+                    formMessage.textContent = 'Thank you! Your message has been sent successfully.';
+                    formMessage.className = 'form-message success';
+                    form.reset();
+                } else {
+                    throw new Error('All submission methods failed');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                formMessage.textContent = 'Error: Could not send message. Please email us directly at info@adrbscloudindia.com or call +91 9236586159';
+                formMessage.className = 'form-message error';
+            } finally {
+                submitButton.disabled = false;
+                buttonText.textContent = 'Send Message';
+            }
+        });
+
+        // FormSubmit Submission Method
+        async function submitViaFormSubmit(formData) {
+            try {
+                const response = await fetch('https://formsubmit.co/ajax/info@adrbscloudindia.com', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ...formData,
+                        _subject: 'New Contact Form Submission - ADRBS Website',
+                        _template: 'table',
+                        _captcha: 'false'
+                    })
+                });
+                return response;
+            } catch (error) {
+                console.error('FormSubmit error:', error);
+                return { ok: false };
+            }
+        }
+
+        // Server-side Fallback Method (replace with your actual endpoint)
+        async function submitViaServer(formData) {
+            try {
+                const response = await fetch('https://your-server-endpoint.com/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                return response;
+            } catch (error) {
+                console.error('Server submission error:', error);
+                return { ok: false };
+            }
+        }
+    </script>
 </body>
 </html>
