@@ -1,3 +1,4 @@
+# .github/workflows/deploy.yml
 name: Deploy to GitHub Pages
 
 on:
@@ -8,18 +9,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      # Your build steps here...
-      
-      # Create CNAME file with your domain
-      - name: Create CNAME file
-        run: echo "adrbscloudindia.com" > ./build/CNAME
-        # OR: echo "docs.adrbscloudindia.com" > ./build/CNAME
-      
-      - name: Deploy to GitHub Pages
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build  # Your build directory
-          cname: adrbscloudindia.com  # Your domain here
+          github_token: ${{ secrets.GH_PAGES_TOKEN }}
+          publish_dir: .
+          cname: adrbscloudindia.com
