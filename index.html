@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ADRBS Pvt Ltd | Development & Deployment Solutions</title>
-    <link rel="icon" href="https://www.adrbscloudindia.com/Images/Assets/Image/Portfolio/Logo.jpeg" type="image/jpeg">
+    <!-- Fix: Use GitHub Pages URL for favicon -->
+    <link rel="icon" href="https://abhashducat93.github.io/adrbs2025/Logo.jpeg" type="image/jpeg">
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -92,6 +93,8 @@
         
         .logo img {
             height: 30px;
+            width: auto;
+            border-radius: 4px;
         }
         
         .logo span {
@@ -702,7 +705,8 @@
     <header>
         <div class="container header-container">
             <div class="logo">
-                <img src="https://www.adrbscloudindia.com/Images/Assets/Image/Portfolio/Logo.jpeg" alt="ADRBS Logo">
+                <!-- Fix: Use GitHub Pages URL for logo -->
+                <img src="https://abhashducat93.github.io/adrbs2025/Logo.jpeg" alt="ADRBS Logo" id="logoImage">
                 ADR<span>BS</span> Pvt Ltd
             </div>
             <nav>
@@ -1181,6 +1185,56 @@
                 return { ok: false };
             }
         }
+
+        // Smart logo loading with fallbacks
+        window.addEventListener('load', function() {
+            const logoImage = document.getElementById('logoImage');
+            const favicon = document.querySelector('link[rel="icon"]');
+            
+            // Check if logo exists at GitHub Pages URL
+            const checkLogo = new Image();
+            checkLogo.onload = function() {
+                // Logo exists at GitHub Pages URL
+                console.log('Logo loaded from GitHub Pages');
+            };
+            checkLogo.onerror = function() {
+                // Try alternative URLs if GitHub Pages fails
+                const alternativeUrls = [
+                    'Logo.jpeg',
+                    'logo.jpeg',
+                    'Logo.jpg',
+                    'logo.jpg',
+                    'Logo.png',
+                    'logo.png',
+                    'images/Logo.jpeg',
+                    'assets/Logo.jpeg'
+                ];
+                
+                let currentIndex = 0;
+                function tryNextLogo() {
+                    if (currentIndex < alternativeUrls.length) {
+                        const testImg = new Image();
+                        testImg.onload = function() {
+                            // Update both favicon and logo
+                            logoImage.src = alternativeUrls[currentIndex];
+                            favicon.href = alternativeUrls[currentIndex];
+                        };
+                        testImg.onerror = function() {
+                            currentIndex++;
+                            tryNextLogo();
+                        };
+                        testImg.src = alternativeUrls[currentIndex];
+                    } else {
+                        // All URLs failed, use placeholder
+                        logoImage.src = 'https://via.placeholder.com/30x30/3498db/ffffff?text=A';
+                        favicon.href = 'https://via.placeholder.com/32x32/3498db/ffffff?text=A';
+                    }
+                }
+                
+                tryNextLogo();
+            };
+            checkLogo.src = 'https://abhashducat93.github.io/adrbs2025/Logo.jpeg';
+        });
     </script>
 </body>
 </html>
